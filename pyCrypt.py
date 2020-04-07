@@ -3,19 +3,33 @@
 import pyAesCrypt
 from getpass import getpass
 from os import stat, remove
-import sys
+import sys, getopt
 
 bufferSize = 64 * 1024 # encryption/decryption buffer size - 64K
 password = getpass()
-#plainData = sys.argv[2]
-plainData = "test.txt"
-encData = "cipher.txt"
+# plainData = sys.argv[2]
+# plainData = "test.txt"
+# encData = "cipher.txt"
 
-def main():
+def main(argv):
+    plainFile  = ''
+    encFile  = ''
+    try:
+        opts,args = getopt.getopt(argv,"hi:o:",["plainFile=","encFile="])
+    except getopt.GetoptError:
+        print ('pyCrypt.py -i <inputfile> -o <outputfile>')
+        sys.exit(2)
+    for opt, arg in opts:
+        if opt == '-h':
+            print ('pyCrypt.py -i <inputfile> -o <outputfile>')
+            sys.exit()
+        elif opt in ("-i", "--ifile"):
+            plainFile = arg
+        elif opt in ("-o", "--ofile"):
+            encFile = arg
+
     action = sys.argv[1] # enc || dec
-#   if action not in 'enc' or 'dec':
-#        print(sys.argv[1])
-#        print(sys.argv[0] + ' ' + 'use enc | dec  as an option')
+
     if action in 'enc':
         encryptFile()
     elif action in 'dec':
@@ -23,16 +37,15 @@ def main():
 
 # encrypt
 def encryptFile():
-  with open("test.txt", "rb") as fIn:
-    with open("cipher.txt", "wb") as fOut:
+  with open(plainFile, "rb") as fIn:
+    with open(encFile, "wb") as fOut:
         pyAesCrypt.encryptStream(fIn, fOut, password, bufferSize)
-  remove("test.txt")
+  remove(plainFile)
 
 # decrypt
 def decryptFile():
-  encFileSize = stat("cipher.txt").st_size # get encrypted file size
-  print(encFileSize)
-  with open("cipher.txt", "rb") as fIn:
+  encFileSize = stat(ifile).st_size # get encrypted file size
+  with open(ofile, "rb") as fIn:
     try:
         with open("test.txt", "wb") as fOut:
             # decrypt file stream
@@ -42,4 +55,4 @@ def decryptFile():
         remove("cipher.txt") # remove output file on error
 
 if __name__=="__main__":
-    main()
+    main(sys.argv[1:])
