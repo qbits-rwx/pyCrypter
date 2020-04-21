@@ -24,8 +24,8 @@ def main():
 
 # encrypt
 def encryptFile():
+  print('inputfile:', args.ifile)
   password = getpass()
-  print('Ich vershlüssle')
   with open(args.ifile, "rb") as fIn:
     with open(args.ofile, "wb") as fOut:
         pyAesCrypt.encryptStream(fIn, fOut, password, bufferSize)
