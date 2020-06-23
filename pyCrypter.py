@@ -6,9 +6,6 @@ from os import stat, remove
 import sys
 import argparse
 
-bufferSize = 64 * 1024  # encryption/decryption buffer size - 64K
-
-
 def main():
     parser = argparse.ArgumentParser(
         description='A Script to encrypt and decrypt files using pyAesCrypt')
@@ -29,6 +26,9 @@ def main():
 
     global args
     args = parser.parse_args()
+    
+    global bufferSize
+    bufferSize = 64 * 1024  # encryption/decryption buffer size - 64K
 
     if args.action == 'enc':
         encryptFile()
