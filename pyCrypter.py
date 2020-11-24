@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+# merge commit test
 import pyAesCrypt
 from getpass import getpass
 from os import stat, remove
