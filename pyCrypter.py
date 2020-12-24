@@ -19,13 +19,8 @@ def main():
         required=True,
         help='Choose between enc for encrypt and dec for decryption')
     parser.add_argument('-i', '--ifile', required=True)
-    parser.add_argument('-o', '--ofile', required=True)
-    parser.add_argument('-s',
-                        '--safe-mode=',
-                        required=False,
-                        choices=['True', 'False'],
-                        default='False',
-                        help='True will remove the plaintext file')
+    parser.add_argument('-o', '--ofile', required=False, help='if not set print to console')
+    
 
     global args
     args = parser.parse_args()
@@ -42,8 +37,10 @@ def encryptFile():
     with open(args.ifile, "rb") as fIn:
         with open(args.ofile, "wb") as fOut:
             pyAesCrypt.encryptStream(fIn, fOut, password, bufferSize)
-            if args.s == 'True':
-                remove(args.ifile)
+            # rmFileChoice = 'n'
+            # rmFileChoice = input('Delete the plaintext file: [y||n]')
+            # if rmFileChoice == 'y':
+            #  remove(args.ifile)
 
 
 # decrypt
@@ -56,6 +53,7 @@ def decryptFile():
                 # decrypt file stream
                 pyAesCrypt.decryptStream(fIn, fOut, password, bufferSize,
                                          encFileSize)
+                print(fOut=sys.stdout)
         except ValueError:
             print('Error')
             remove(args.ofile)  # remove output file on error
